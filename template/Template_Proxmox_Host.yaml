@@ -2,13 +2,13 @@ zabbix_export:
   version: '7.0'
   template_groups:
     - uuid: 7df96b18c230490a9a0a9e2307226338
-      name: Templates/Virtualization
+      name: Templates
   templates:
     - uuid: 1f59c0d78f714c30b8e4b9b30c7b2f10
       template: Proxmox Host by Agent
       name: Proxmox Host by Agent
       groups:
-        - name: Templates/Virtualization
+        - name: Templates
       items:
         - uuid: 4c690a47d8ef4cf4ad0cc2c356b3a001
           name: Proxmox API
@@ -33,6 +33,36 @@ zabbix_export:
           type: ZABBIX_PASSIVE
           key: proxmox.updates
           delay: 1h
+          value_type: TEXT
+        - uuid: 4c690a47d8ef4cf4ad0cc2c356b3a005
+          name: Proxmox SMART
+          type: ZABBIX_PASSIVE
+          key: proxmox.smart
+          delay: 15m
+          value_type: TEXT
+        - uuid: 4c690a47d8ef4cf4ad0cc2c356b3a006
+          name: Proxmox ZFS
+          type: ZABBIX_PASSIVE
+          key: proxmox.zfs
+          delay: 5m
+          value_type: TEXT
+        - uuid: 4c690a47d8ef4cf4ad0cc2c356b3a007
+          name: Proxmox backup tasks
+          type: ZABBIX_PASSIVE
+          key: proxmox.backup
+          delay: 15m
+          value_type: TEXT
+        - uuid: 4c690a47d8ef4cf4ad0cc2c356b3a008
+          name: Proxmox certificates
+          type: ZABBIX_PASSIVE
+          key: proxmox.certificates
+          delay: 1h
+          value_type: TEXT
+        - uuid: 4c690a47d8ef4cf4ad0cc2c356b3a009
+          name: Proxmox storage
+          type: ZABBIX_PASSIVE
+          key: proxmox.storage
+          delay: 15m
           value_type: TEXT
         - uuid: 4c690a47d8ef4cf4ad0cc2c356b3a101
           name: Proxmox API collector error
@@ -67,3 +97,318 @@ zabbix_export:
             - type: JSONPATH
               parameters:
                 - $.updates
+        - uuid: 4c690a47d8ef4cf4ad0cc2c356b3a104
+          name: Proxmox journal kernel panic events
+          type: DEPENDENT
+          key: proxmox.journal.kernel_panic
+          value_type: UNSIGNED
+          master_item:
+            key: proxmox.journal
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.kernel_panic
+        - uuid: 4c690a47d8ef4cf4ad0cc2c356b3a105
+          name: Proxmox journal filesystem errors
+          type: DEPENDENT
+          key: proxmox.journal.filesystem_error
+          value_type: UNSIGNED
+          master_item:
+            key: proxmox.journal
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.filesystem_error
+        - uuid: 4c690a47d8ef4cf4ad0cc2c356b3a106
+          name: Proxmox journal kernel errors
+          type: DEPENDENT
+          key: proxmox.journal.kernel_error
+          value_type: UNSIGNED
+          master_item:
+            key: proxmox.journal
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.kernel_error
+        - uuid: 4c690a47d8ef4cf4ad0cc2c356b3a107
+          name: Proxmox service pveproxy active
+          type: DEPENDENT
+          key: proxmox.services.pveproxy
+          value_type: UNSIGNED
+          master_item:
+            key: proxmox.services
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.pveproxy
+        - uuid: 4c690a47d8ef4cf4ad0cc2c356b3a108
+          name: Proxmox service pvestatd active
+          type: DEPENDENT
+          key: proxmox.services.pvestatd
+          value_type: UNSIGNED
+          master_item:
+            key: proxmox.services
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.pvestatd
+        - uuid: 4c690a47d8ef4cf4ad0cc2c356b3a109
+          name: Proxmox service pvedaemon active
+          type: DEPENDENT
+          key: proxmox.services.pvedaemon
+          value_type: UNSIGNED
+          master_item:
+            key: proxmox.services
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.pvedaemon
+        - uuid: 4c690a47d8ef4cf4ad0cc2c356b3a110
+          name: Proxmox ZFS healthy
+          type: DEPENDENT
+          key: proxmox.zfs.healthy
+          value_type: UNSIGNED
+          master_item:
+            key: proxmox.zfs
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.healthy
+        - uuid: 4c690a47d8ef4cf4ad0cc2c356b3a111
+          name: Proxmox SMART devices
+          type: DEPENDENT
+          key: proxmox.smart.devices
+          value_type: TEXT
+          master_item:
+            key: proxmox.smart
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.devices
+        - uuid: 4c690a47d8ef4cf4ad0cc2c356b3a112
+          name: Proxmox backup task data
+          type: DEPENDENT
+          key: proxmox.backup.tasks
+          value_type: TEXT
+          master_item:
+            key: proxmox.backup
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.tasks
+        - uuid: 4c690a47d8ef4cf4ad0cc2c356b3a113
+          name: Proxmox storage data
+          type: DEPENDENT
+          key: proxmox.storage.data
+          value_type: TEXT
+          master_item:
+            key: proxmox.storage
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.storage
+        - uuid: 4c690a47d8ef4cf4ad0cc2c356b3a114
+          name: Proxmox certificate data
+          type: DEPENDENT
+          key: proxmox.certificates.data
+          value_type: TEXT
+          master_item:
+            key: proxmox.certificates
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.certificates
+        - uuid: 4c690a47d8ef4cf4ad0cc2c356b3a115
+          name: Proxmox node CPU load
+          type: DEPENDENT
+          key: proxmox.node.cpu
+          value_type: FLOAT
+          units: '%'
+          master_item:
+            key: proxmox.api
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.nodes[0].cpu
+            - type: MULTIPLIER
+              parameters:
+                - '100'
+        - uuid: 4c690a47d8ef4cf4ad0cc2c356b3a116
+          name: Proxmox node memory used
+          type: DEPENDENT
+          key: proxmox.node.memory.used
+          value_type: UNSIGNED
+          units: B
+          master_item:
+            key: proxmox.api
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.nodes[0].mem
+        - uuid: 4c690a47d8ef4cf4ad0cc2c356b3a117
+          name: Proxmox node memory total
+          type: DEPENDENT
+          key: proxmox.node.memory.total
+          value_type: UNSIGNED
+          units: B
+          master_item:
+            key: proxmox.api
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.nodes[0].maxmem
+        - uuid: 4c690a47d8ef4cf4ad0cc2c356b3a118
+          name: Proxmox node disk used
+          type: DEPENDENT
+          key: proxmox.node.disk.used
+          value_type: UNSIGNED
+          units: B
+          master_item:
+            key: proxmox.api
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.nodes[0].disk
+        - uuid: 4c690a47d8ef4cf4ad0cc2c356b3a119
+          name: Proxmox node disk total
+          type: DEPENDENT
+          key: proxmox.node.disk.total
+          value_type: UNSIGNED
+          units: B
+          master_item:
+            key: proxmox.api
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.nodes[0].maxdisk
+        - uuid: 4c690a47d8ef4cf4ad0cc2c356b3a120
+          name: Proxmox node uptime
+          type: DEPENDENT
+          key: proxmox.node.uptime
+          value_type: UNSIGNED
+          units: uptime
+          master_item:
+            key: proxmox.api
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.nodes[0].uptime
+      discovery_rules:
+        - uuid: 6c690a47d8ef4cf4ad0cc2c356b3a001
+          name: Proxmox SMART devices discovery
+          type: DEPENDENT
+          key: proxmox.smart.discovery
+          lifetime: 30d
+          master_item:
+            key: proxmox.smart
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.data
+          item_prototypes:
+            - uuid: 6c690a47d8ef4cf4ad0cc2c356b3a101
+              name: SMART health [{#DEVICE}]
+              type: DEPENDENT
+              key: proxmox.smart.health[{#DEVICE}]
+              value_type: UNSIGNED
+              master_item:
+                key: proxmox.smart
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$.devices["{#DEVICE}"].health'
+            - uuid: 6c690a47d8ef4cf4ad0cc2c356b3a102
+              name: SMART temperature [{#DEVICE}]
+              type: DEPENDENT
+              key: proxmox.smart.temperature[{#DEVICE}]
+              value_type: FLOAT
+              units: C
+              master_item:
+                key: proxmox.smart
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$.devices["{#DEVICE}"].temperature'
+            - uuid: 6c690a47d8ef4cf4ad0cc2c356b3a103
+              name: SMART media errors [{#DEVICE}]
+              type: DEPENDENT
+              key: proxmox.smart.media_errors[{#DEVICE}]
+              value_type: UNSIGNED
+              master_item:
+                key: proxmox.smart
+              preprocessing:
+                - type: JSONPATH
+                  parameters:
+                    - '$.devices["{#DEVICE}"].media_errors'
+          trigger_prototypes:
+            - uuid: 6c690a47d8ef4cf4ad0cc2c356b3a201
+              expression: 'last(/Proxmox Host by Agent/proxmox.smart.health[{#DEVICE}])=0'
+              name: SMART health failure [{#DEVICE}]
+              priority: HIGH
+            - uuid: 6c690a47d8ef4cf4ad0cc2c356b3a202
+              expression: 'last(/Proxmox Host by Agent/proxmox.smart.media_errors[{#DEVICE}])>0'
+              name: SMART media errors [{#DEVICE}]
+              priority: HIGH
+          graph_prototypes:
+            - uuid: 6c690a47d8ef4cf4ad0cc2c356b3a301
+              name: SMART temperature [{#DEVICE}]
+              graph_items:
+                - color: FF0000
+                  item:
+                    host: Proxmox Host by Agent
+                    key: proxmox.smart.temperature[{#DEVICE}]
+  graphs:
+    - uuid: 7c690a47d8ef4cf4ad0cc2c356b3a001
+      name: Proxmox node CPU load
+      graph_items:
+        - color: 1A7C11
+          item:
+            host: Proxmox Host by Agent
+            key: proxmox.node.cpu
+    - uuid: 7c690a47d8ef4cf4ad0cc2c356b3a002
+      name: Proxmox node memory usage
+      graph_items:
+        - color: 2774A4
+          item:
+            host: Proxmox Host by Agent
+            key: proxmox.node.memory.used
+        - color: FFBF00
+          item:
+            host: Proxmox Host by Agent
+            key: proxmox.node.memory.total
+    - uuid: 7c690a47d8ef4cf4ad0cc2c356b3a003
+      name: Proxmox node disk usage
+      graph_items:
+        - color: C0392B
+          item:
+            host: Proxmox Host by Agent
+            key: proxmox.node.disk.used
+        - color: 8E44AD
+          item:
+            host: Proxmox Host by Agent
+            key: proxmox.node.disk.total
+  triggers:
+    - uuid: 5c690a47d8ef4cf4ad0cc2c356b3a001
+      expression: 'last(/Proxmox Host by Agent/proxmox.journal.oom)>0'
+      name: Proxmox OOM event detected
+      priority: HIGH
+    - uuid: 5c690a47d8ef4cf4ad0cc2c356b3a002
+      expression: 'last(/Proxmox Host by Agent/proxmox.journal.kernel_panic)>0'
+      name: Proxmox kernel panic detected
+      priority: DISASTER
+    - uuid: 5c690a47d8ef4cf4ad0cc2c356b3a003
+      expression: 'last(/Proxmox Host by Agent/proxmox.journal.filesystem_error)>0'
+      name: Proxmox filesystem error detected
+      priority: HIGH
+    - uuid: 5c690a47d8ef4cf4ad0cc2c356b3a004
+      expression: 'last(/Proxmox Host by Agent/proxmox.zfs.healthy)=0'
+      name: Proxmox ZFS pool is not healthy
+      priority: HIGH
+    - uuid: 5c690a47d8ef4cf4ad0cc2c356b3a005
+      expression: 'last(/Proxmox Host by Agent/proxmox.services.pveproxy)=0'
+      name: Proxmox pveproxy is inactive
+      priority: HIGH
+    - uuid: 5c690a47d8ef4cf4ad0cc2c356b3a006
+      expression: 'last(/Proxmox Host by Agent/proxmox.services.pvestatd)=0'
+      name: Proxmox pvestatd is inactive
+      priority: HIGH
