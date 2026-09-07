@@ -1,0 +1,69 @@
+zabbix_export:
+  version: '7.0'
+  template_groups:
+    - uuid: 7df96b18c230490a9a0a9e2307226338
+      name: Templates/Virtualization
+  templates:
+    - uuid: 1f59c0d78f714c30b8e4b9b30c7b2f10
+      template: Proxmox Host by Agent
+      name: Proxmox Host by Agent
+      groups:
+        - name: Templates/Virtualization
+      items:
+        - uuid: 4c690a47d8ef4cf4ad0cc2c356b3a001
+          name: Proxmox API
+          type: ZABBIX_PASSIVE
+          key: proxmox.api
+          delay: 5m
+          value_type: TEXT
+        - uuid: 4c690a47d8ef4cf4ad0cc2c356b3a002
+          name: Proxmox journal
+          type: ZABBIX_PASSIVE
+          key: proxmox.journal
+          delay: 5m
+          value_type: TEXT
+        - uuid: 4c690a47d8ef4cf4ad0cc2c356b3a003
+          name: Proxmox services
+          type: ZABBIX_PASSIVE
+          key: proxmox.services
+          delay: 5m
+          value_type: TEXT
+        - uuid: 4c690a47d8ef4cf4ad0cc2c356b3a004
+          name: Proxmox updates
+          type: ZABBIX_PASSIVE
+          key: proxmox.updates
+          delay: 1h
+          value_type: TEXT
+        - uuid: 4c690a47d8ef4cf4ad0cc2c356b3a101
+          name: Proxmox API collector error
+          type: DEPENDENT
+          key: proxmox.api.error
+          value_type: UNSIGNED
+          master_item:
+            key: proxmox.api
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.error
+        - uuid: 4c690a47d8ef4cf4ad0cc2c356b3a102
+          name: Proxmox OOM detected
+          type: DEPENDENT
+          key: proxmox.journal.oom
+          value_type: UNSIGNED
+          master_item:
+            key: proxmox.journal
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.oom
+        - uuid: 4c690a47d8ef4cf4ad0cc2c356b3a103
+          name: Proxmox updates available
+          type: DEPENDENT
+          key: proxmox.updates.count
+          value_type: UNSIGNED
+          master_item:
+            key: proxmox.updates
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.updates
